@@ -18,7 +18,11 @@ alpha = 90
 while(True):
 
     ret, frame = camera.read()
+    
+    frame = cv2.flip(frame, 1)
+    frame = frame[40:260, 180:400] # TODO
     (h, w) = frame.shape[:2]
+    #print(h, w)
     # break if camera not responding
     if not ret:
         raise Exception("Camera malfunction")
@@ -34,10 +38,13 @@ while(True):
         circles, coords = cubes.find_circles(frame, mask)
 
         # transform coords to cm
+        new_x = coords[0] * 15 / 110
+        new_y = coords[1] * 12.5 / 110
 
         # show message
-        cv2.putText(frame, f"X: {str(round(coords[0], 3))}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (124, 252, 0), 2)
-        cv2.putText(frame, f"Y: {str(round(coords[1], 3))}", (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (124, 252, 0), 2)
+        cv2.putText(frame, f"X: {str(round(new_x, 3))}", (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (124, 252, 0), 2)
+        cv2.putText(frame, f"Y: {str(round(new_y, 3))}", (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (124, 252, 0), 2)
+
 
         # show frames
         cv2.imshow("frame", frame)
